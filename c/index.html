@@ -3,6 +3,9 @@
 
 <head>
 	<div id="head_template"></div>
+    <style>
+        input.tt-input {width:100px;}
+    </style>
 </head>
 
 <body class="sidebar-mini">
@@ -79,10 +82,19 @@
 					    <p class="card-category">Explore or Download</p>
 					</div>
 					<div class="card-body">
+                                    Add Folder Grouping Heirarchy:
+                                    <hr style="padding:0; padding-bottom:5px; margin: 0">
+                        <input id="view_tags" type="text" value="1. Cohort,2. Fixative,3. Study" /><div>
+                            <select id="view_tag_select" class="form-control input-sm" data-style="btn-default btn-outline" data-menu-style="dropdown-blue"><option>Default</option><!--<option value='fixative'>Fixative</option><option value='study'>Study</option><option value='gender'>Gender</option><option value='animal'>Animal Type</option><option value='stain'>Stain</option>--></select>
+                        <!--<input type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" data-role="tagsinput" />-->
 					    <div class="table-full-width">
-						<div id="datasets-table">
+                        <div id="hierarchy_">
+                            <center><img id="loading_hierarchy" class="collapse hide" height="50px" width="50px" src="/labcas-ui/assets/img/loading.gif"></center>
+                        </div>
+						<div id="datasets-table">       
 							<center><img id="loading_dataset" class="collapse show" height="50px" width="50px" src="/labcas-ui/assets/img/loading.gif"></center>
 						</div>
+
 					    </div>
 					</div>
 				    </div>
@@ -182,10 +194,12 @@
 <!-- Light Dashboard DEMO methods, don't include it in your project! -->
 <!--<script src="/labcas-ui/assets/js/demo.js"></script>-->
 <script src="/labcas-ui/assets/js/plugins/js.cookie.js"></script>
+<script src="/labcas-ui/assets/js/plugins/typeahead.bundle.js"></script>
 <script src="/labcas-ui/assets/js/labcas/labcas-sidebar.js"></script>
-<script src="/labcas-ui/assets/js/labcas/authentication.js?version=2.3.2"></script>
+<script src="/labcas-ui/assets/js/labcas/authentication.js?version=2.3.3"></script>
 <script src="/labcas-ui/assets/js/labcas/utils.js?version=2.3.3"></script>
 <script src="/labcas-ui/assets/js/labcas/search.js?version=2.3.2"></script>
+<script src="/labcas-ui/assets/js/labcas/hierarchy_filter_utils.js?version=2.3.2"></script>
 <script type="text/javascript">
     var get_var = get_url_vars();
     var dataset_id = get_var["collection_id"]+"/"+get_var["collection_id"];
@@ -209,15 +223,50 @@
         $( "#footer_template" ).load("/labcas-ui/templates.html #footer_template_"+localStorage.getItem("environment_name"));
         $( "#sidebar_placeholder" ).load("/labcas-ui/sidebar_"+localStorage.getItem("environment_name")+".html?9" );
 
-	
-
-
         Cookies.set("login_redirect", "/labcas-ui/c/index.html?collection_id="+get_var["collection_id"]);
         setup_labcas_data("collectiondatasets",'id:"'+get_var["collection_id"]+'"', 'CollectionId:"'+get_var["collection_id"]+'"');
         $("#breadcrumb_collection").text(get_var["collection_id"].replace(/_/g," "));
-	setTimeout(function(){
-                init_file_checkboxes('none');
-              },1000);
+
+
+        //Setup view tags
+        var tagValues = ["Cohort","Fixative","Study","Gender","Animal Type","Stain"];
+        var states = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: $.map(tagValues, function(tagValue) { return { value: tagValue }; })
+        });
+
+        states.initialize();
+        var elt = $('#view_tags');
+        elt.tagsinput({ itemValue: "value",
+              typeaheadjs: {
+              displayKey: 'value',
+              source: states.ttAdapter()
+              }
+          });
+        //elt.tagsinput('add', { "value": 1});
+        $('#view_tag_select').change(function() {
+                if (this.value != "Default"){
+                    $('#datasets-table').hide();
+                    $('#hierarchy_').show();
+                    elt.tagsinput('add', { "value": this.value});
+                    //$('#hierarchy_').html("");
+                    //fill_hierarchy_data(collection_facets, get_var["collection_id"], [], [], 0);
+                }else{
+                    $('#hierarchy_').hide();
+                    $('#datasets-table').show();
+                }
+        });
+        $('#view_tags').on('itemAdded itemRemoved', function() {
+            $('#hierarchy_').html("");
+            localStorage.setItem("last_collection_id", get_var["collection_id"]);
+            fill_hierarchy_data(collection_facets, get_var["collection_id"], [], [], 0);
+        });
+        $('.twitter-typeahead').hide();
+        setTimeout(function(){
+            init_file_checkboxes('none');
+             collection_hierarchy_get(get_var["collection_id"]);
+        },1000);
     });
 </script>
 

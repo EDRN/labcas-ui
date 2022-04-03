@@ -53,7 +53,7 @@
 					<a href="#" onclick="download_files('cart')"><li class="dropdown-item text-info" >Download File(s) <span id="cart_size"></span></li></a>
                     <a href="#" onclick="submitImageData('cart_image');"><li class="dropdown-item text-success" >View Images (<span id="image_size">0</span>)</li></a>
                     <a href="#" onclick="submitImageData('cart_dicom');"><li class="dropdown-item text-success" >View Dicoms (<span id="dicom_size">0</span>)</li></a>
-                    <!--<a href="#" onclick="submitImageData('cart_omero');"><li class="dropdown-item text-success" >View Omero (<span id="omero_size">0</span>)</li></a>-->
+                    <a href="#" onclick="submitImageData('cart_omero');"><li class="dropdown-item text-success" >View Omero (<span id="omero_size">0</span>)</li></a>
 					<a href="#" onclick="clear_cart('search-file-table'); clear_cart('files-table');"><li class="dropdown-item text-warning" >Clear Cart</li></a>
                                 </ul>
                         </li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -223,8 +223,8 @@
           <div style="padding-left:40px" class="col-12 col-md-3">
 		<h5>Get the Newsletter</h5>
                 <form action='https://www.jpl.nasa.gov/signup/index.php' class='submit_newsletter' method="post">
-                  <input class='email_field' name='email_field' onblur="this.placeholder = 'enter email address'" onfocus="this.placeholder = ''" placeholder='enter email address' type='text' value=''>
-                  <input class='email_submit' type='submit' value='Submit'>
+                    <div class="col-md-8" style="padding-left:0px"><input class='email_field form-control' name='email_field' onblur="this.placeholder = 'enter email address'" onfocus="this.placeholder = ''" placeholder='enter email address' type='text' value=''></div>
+                    <div class="col-md-4" style="padding-left:0px"><input class='email_submit form-control' type='submit' value='Submit'></div>
                 </form>
 		<br>
             <h5>Follow JPL</h5>

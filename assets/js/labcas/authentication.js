@@ -208,6 +208,7 @@ function fill_collections_data(data){
     });
 }
 function fill_collection_details_data(data){
+    console.log("Fill collection details");
 	//console.log(data);
         if(!data.response.docs[0]){
                 if(!Cookies.get("token") || Cookies.get("token") == "None"){
@@ -217,7 +218,7 @@ function fill_collection_details_data(data){
 		}
         }
 	var collectioname = data.response.docs[0].CollectionName;
-	$("#collectiontitle").html(collectioname);
+    console.log("WHAT5");
 	if (collectioname.length > 35){
 		collectioname = collectioname.slice(0,35);
 	}
@@ -317,6 +318,7 @@ function fill_collection_details_data(data){
     });
 
 	$('#loading_collection').hide(500);    
+	$("#collectiontitle").html(collectioname);
 
 
 }
@@ -326,7 +328,10 @@ function fill_dataset_details_data(data){
 	if (datasetname.length > 25){
 		datasetname = datasetname.slice(0,25);
 	}
-	$("#collection_datasets_len").html(datasetname);
+    console.log("WH1");
+    setTimeout(function() {
+        $("#collection_datasets_len").html(datasetname);
+    }, 2000);
 	
 	var collectionid = data.response.docs[0].CollectionId;
 	var collectionname = data.response.docs[0].CollectionName;
@@ -478,7 +483,9 @@ function fill_file_details_data(data){
 		}else{
 			$("#viewer_icon").attr("onclick","submitSingleImageData('"+html_safe_id+"','"+fileloc+"','"+filename+"','"+version+"');");
                 }
-		$('#image_viewer_link').show();
+        if (check_image_filtered_dataset(html_safe_id)){
+            $('#image_viewer_link').show();
+        }
 	}
 
 	$('#loading').hide(500);
@@ -534,7 +541,8 @@ function fill_file_image_viewer_data(data){
 function fill_datasets_children(data){
 	data.response.docs.sort(dataset_compare_sort);
         var dataset_html = "";
-	var flag = "";
+        var flag = "";
+        var dataset_count = 0;
         $.each(data.response.docs, function(key, value) {
 			if (flag == ""){
 				flag = true;
@@ -575,10 +583,18 @@ function fill_datasets_children(data){
                                                 "</button>"+
                                         "</div>"+
                                 "</div>";
+                    dataset_count += 1;
                 });
 	if ( dataset_html != ""){
 		$("#children-datasets").show();
-	}
+        $( "#dataset_stat_template" ).load("/labcas-ui/templates.html #dataset_stat_template");
+        console.log("OKOK1");
+        setTimeout(function() { 
+            $("#collection_datasets_len").html(dataset_count);
+        }, 2000);
+	}else{
+        $( "#dataset_stat_template" ).load("/labcas-ui/templates.html?version=2.3.2 #dataset_name_template");
+    }
         $("#children-datasets-section").append(dataset_html);
 }
 function fill_collection_level_files(data){
@@ -919,9 +935,9 @@ function setup_labcas_data(datatype, query, dataset_query){
          }
     });
     if (datatype == "collectiondatasets"){
-	console.log(localStorage.getItem('environment')+"/data-access-api/datasets/select?q="+dataset_query+"&wt=json&indent=true&rows=10000");
+	console.log(localStorage.getItem('environment')+"/data-access-api/datasets/select?q="+dataset_query+"&wt=json&indent=true&rows=20000");
     	$.ajax({
-		url: localStorage.getItem('environment')+"/data-access-api/datasets/select?q="+dataset_query+"&wt=json&indent=true&rows=10000",
+		url: localStorage.getItem('environment')+"/data-access-api/datasets/select?q="+dataset_query+"&wt=json&indent=true&rows=20000",
 		beforeSend: function(xhr) { 
 			if(Cookies.get('token') && Cookies.get('token') != "None"){
 				xhr.setRequestHeader("Authorization", "Bearer " + Cookies.get('token')); 
@@ -945,9 +961,9 @@ function setup_labcas_data(datatype, query, dataset_query){
 }
 function populate_dataset_children(query){
 	query = query.replace(/id:/,'DatasetParentId')+"%5C%2A";
-	console.log(localStorage.getItem('environment')+"/data-access-api/datasets/select?q="+query+"&wt=json&indent=true&rows=10000&sort=id%20asc");
+	console.log(localStorage.getItem('environment')+"/data-access-api/datasets/select?q="+query+"&wt=json&indent=true&rows=20000&sort=id%20asc");
 	$.ajax({
-		url: localStorage.getItem('environment')+"/data-access-api/datasets/select?q="+query+"&wt=json&indent=true&rows=10000&sort=id%20asc",
+		url: localStorage.getItem('environment')+"/data-access-api/datasets/select?q="+query+"&wt=json&indent=true&rows=20000&sort=id%20asc",
 		xhrFields: {
 				withCredentials: true
 		  },
@@ -1009,6 +1025,8 @@ function setup_labcas_dataset_data(datatype, query, file_query, cpage){
 		 }
 	});
     }
+    //Set dataset size
+    
     console.log(localStorage.getItem('environment')+"/data-access-api/files/select?q="+file_query+"&wt=json&indent=true&sort=FileName%20asc&start="+cpage*10);
     $.ajax({
         url: localStorage.getItem('environment')+"/data-access-api/files/select?q="+file_query+"&wt=json&indent=true&sort=FileName%20asc&start="+cpage*10,
@@ -1037,8 +1055,15 @@ function setup_labcas_dataset_data(datatype, query, file_query, cpage){
 
 function setup_labcas_file_data(datatype, query, file_query){
 	console.log("QUERY");
+	console.log(query);
+
+    //Url encode just in case
+//query = query.replace("+","%5C%2B");
+
+	console.log("Escaped2");
+	console.log(query);
 	console.log(localStorage.getItem('environment')+"/data-access-api/files/select?q="+query+"&wt=json&sort=FileName%20asc&indent=true");
-	
+
     $.ajax({
         url: localStorage.getItem('environment')+"/data-access-api/files/select?q="+query+"&wt=json&sort=FileName%20asc&indent=true",
         xhrFields: {
@@ -1391,6 +1416,62 @@ function generate_categories(field_id, data){
 		});
 	});
 }
+
+//Recursive function to loop through collection, dataset, file hierachy to get filters
+function add_labcas_api_facets(querytypes, query, filters, facets, newdata, callback){
+        if (querytypes.length < 1){
+            callback(newdata);
+        }else{
+            var querytype = querytypes.pop();
+            $.ajax({
+                url: localStorage.getItem('environment')+"/data-access-api/"+querytype+"/select?q="+query+""+filters+"&facet=true&facet.limit=-1&facet.field="+facets.join("&facet.field=")+"&wt=json",
+                beforeSend: function(xhr) {
+                    if(Cookies.get('token') && Cookies.get('token') != "None"){
+                        xhr.setRequestHeader("Authorization", "Bearer " + Cookies.get('token')); 
+                    }
+                },
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    //join existing data with newdata
+                    if (newdata.facet_counts){
+                    console.log(localStorage.getItem('environment')+"/data-access-api/"+querytype+"/select?q="+query+""+filters+"&facet=true&facet.limit=-1&facet.field="+facets.join("&facet.field=")+"&wt=json");
+                    console.log(newdata.facet_counts);
+                    console.log(newdata.facet_counts.facet_fields.length);
+                    }
+                    if (newdata && newdata.facet_counts && newdata.facet_counts.facet_fields && Object.keys(newdata.facet_counts.facet_fields).length > 0){
+                        console.log("pass1");
+                        if (data && data.facet_counts && data.facet_counts.facet_fields && Object.keys(data.facet_counts.facet_fields).length > 0){
+                            console.log("pass2");
+                              $.each(data.facet_counts.facet_fields, function(i, facet_vals) {
+                                if (facet_vals && facet_vals.length > 0){
+                                    if (newdata.facet_counts.facet_fields[i]){
+                                        newdata.facet_counts.facet_fields[i] = facet_vals.concat(newdata.facet_counts.facet_fields[i].filter((item) => facet_vals.indexOf(item) < 0));
+                                    }
+                                }
+                              });
+                        }
+                    }else{
+                        console.log("didn't pass");
+                        newdata = data;
+                    }
+                    console.log(newdata);
+                    add_labcas_api_facets(querytypes, query, filters, facets, newdata, callback);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr.responseText);
+                    console.log(xhr.status);
+                    console.log(thrownError);
+                    if (!(localStorage.getItem("logout_alert") && localStorage.getItem("logout_alert") == "On")){
+                         localStorage.setItem("logout_alert","On");
+                         alert("You are currently logged out. Redirecting you to log in.");
+                    }
+                    redirect_to_login();
+                 }
+            });
+    }
+}
+
 function fill_collections_facets(data){
 	console.log(data);
 	
@@ -1489,11 +1570,10 @@ function setup_labcas_search(query, divid, cpage){
 				redirect_to_login();
 			 }
 		});
-		console.log(localStorage.getItem('environment')+"/data-access-api/files/select?q="+query+""+collection_filters+"&facet=true&facet.limit=-1&facet.field="+collection_facets.join("&facet.field=")+"&wt=json&rows=0&sort=FileName%20asc");
-		console.log("HERE3");
-		console.log("data");
-		console.log(Cookies.get('token'));
-		$.ajax({
+		//console.log(localStorage.getItem('environment')+"/data-access-api/files/select?q="+query+""+collection_filters+"&facet=true&facet.limit=-1&facet.field="+collection_facets.join("&facet.field=")+"&wt=json&rows=0&sort=FileName%20asc");
+        var querytypes = ["collections","datasets","files"];
+        add_labcas_api_facets(querytypes, query, collection_filters, collection_facets, {}, fill_collections_facets);
+		/*$.ajax({
 			url: localStorage.getItem('environment')+"/data-access-api/files/select?q="+query+""+collection_filters+"&facet=true&facet.limit=-1&facet.field="+collection_facets.join("&facet.field=")+"&wt=json&rows=0&sort=FileName%20asc",
 			beforeSend: function(xhr) {
 				if(Cookies.get('token') && Cookies.get('token') != "None"){
@@ -1517,7 +1597,7 @@ function setup_labcas_search(query, divid, cpage){
 				}
 				redirect_to_login();
 			 }
-		});
+		});*/
     }
     if (divid == "datasets_search" || divid == "all"){
 	wait(1000);

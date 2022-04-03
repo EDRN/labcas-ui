@@ -23,9 +23,10 @@
 <script>
 	
 	$().ready(function() {
-		if (Cookies.get('user') == "Sign in"){
+		if (Cookies.get('user') == "Sign in" && !Cookies.get('accepted')){
 			//alert("In order to download, please login or create an account in order to accept DATA USE AGREEMENT.");
-            $('#redirectModal').modal('show');
+            //$('#redirectModal').modal('show');
+            check_labcas_acceptance("anonymous");
             //window.location.replace("/");
 		}else{
 			var files = JSON.parse(localStorage.getItem("download_list"));
@@ -54,7 +55,7 @@
                 }
             }else{
                 console.log("Going back...");
-                window.location.replace(Cookies.get("login_redirect"));
+                login_redirect();
             }
 		}
 	});
@@ -89,10 +90,16 @@
                                 </div>
                                 <div class="modal-body">
                                     <p><div id="acceptHTML"></div></p>
+                                    <br>
+                                    Enter your labcas username/password to generate a download script:
+                                    <br>
+                                    <div class="col-sm-2">Full Name:</div><div class="col-sm-6"><input type="text" id="accept_user" class=".form-control"></input></div>
+                                    <div class="col-sm-2">Email:</div><div class="col-sm-6"><input type="text" id="accept_email" class=".form-control"></input></div>
+                                    <br>
                                 </div>
                                 <div class="modal-footer">
                                     <!--<center><button type="button" onclick="login_redirect();" class="btn btn-success btn-simple btn-link" data-dismiss="modal"><B>Accept</B></button></center>-->
-                                        <button type="submit" onclick="save_labcas_acceptance(); window.location.reload();" class="btn btn-info btn-fill pull-right" data-dismiss="modal">Accept</button>
+                                        <button type="submit" onclick="save_labcas_acceptance('anonymous');" class="btn btn-info btn-fill pull-right" data-dismiss="modal">Accept</button>
                                 </div>
                             </div>
                         </div>
@@ -124,11 +131,21 @@
                                 </div>
                                 <div class="modal-body">
                                     <div id="sizeHTML"></div>
+                                    <br>
+                                    Enter your labcas username/password to generate a download script:
+                                    <br>
+                                    <div class="col-sm-2">Username:</div><div class="col-sm-6"><input type="text" id="download_script_user" class=".form-control"></input></div>
+                                    <div class="col-sm-2">Password:</div><div class="col-sm-6"><input type="password" id="download_script_pass" class=".form-control"></input></div>
+                                    <br>
+                                    <div class="col-sm-12"><font size=2>Download Script for your operating system:</font>
+                                    <a href="#" onclick="download_script('data_download.ps1','windows');"><img src="/labcas-ui/assets/img/microsoft.png?2" width=33 height=33/></a>
+                                    <a href="#" onclick="download_script('data_download.ps1','mac');"><img src="/labcas-ui/assets/img/apple.jpg" width=32 height=32/></a>
+                                    <a href="#" onclick="download_script('data_download.ps1','linux');"><img src="/labcas-ui/assets/img/linux.png?2" width=33 height=33/><a/>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-link btn-simple" onclick="resume_download();" data-dismiss="modal">Continue</button>
-                                    <button type="button" class="btn btn-link btn-simple" onclick='download_script("data_download.ps1",);' data-dismiss="modal">Download Script</button>
-				    <button type="button" class="btn btn-link btn-simple" onclick="window.location.replace(Cookies.get('login_redirect'));" data-dismiss="modal">Cancel</button>
+                                    <!--<button type="button" class="btn btn-link btn-simple" onclick="resume_download();" data-dismiss="modal">Continue</button>-->
+                                    <button type="button" class="btn btn-link btn-simple" onclick="window.location.replace(Cookies.get('login_redirect'));" data-dismiss="modal">Cancel</button>
                                 </div>
                             </div>
                         </div>
@@ -146,7 +163,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <center><button type="button" id="download_list_link" class="btn btn-link btn-simple" onclick='download_script_files("data_download.ps1",);' >Download Script File List</button></center>
-                                    <center><button type="button" class="btn btn-link btn-simple" onclick='window.location.reload();' data-dismiss="modal">Done</button></center>
+                                    <center><button type="button" class="btn btn-link btn-simple" onclick="window.location.replace(Cookies.get('login_redirect'));" data-dismiss="modal">Done</button></center>
                                 </div>
                             </div>
                         </div>

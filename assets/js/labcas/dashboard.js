@@ -22,7 +22,7 @@ function init_labcas_sunburst_distribution(div_field, filter, collections, colle
 	}];
 
 	var layout = {
-	  yaxis: {title: ylabel},
+        yaxis: {title: ylabel, type: 'log'},
 	  xaxis: {title: xlabel, showline: true, tickangle: 30},
 	  mode: 'text',
 	  margin: {t: 0, b: 75},
@@ -272,7 +272,7 @@ function fill_files_analytics(data){
                 second_graph_leadpi[0].push(val);
             }
 	});
-	init_labcas_data_boxplot_search("labcas_boxplot_distribution","pi_filters", second_graph_leadpi, "Lead PI", "File Count", "LeadPI");
+//init_labcas_data_boxplot_search("labcas_boxplot_distribution","pi_filters", second_graph_leadpi, "Lead PI", "File Count", "LeadPI");
 
         $("#files_len").html(size);
 }

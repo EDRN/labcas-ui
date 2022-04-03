@@ -184,7 +184,7 @@
         });
         $( "#favorite_stat_template" ).load("/labcas-ui/templates.html #favorite_stat_template");
         $( "#file_stat_template" ).load("/labcas-ui/templates.html #file_stat_template");
-        $( "#dataset_stat_template" ).load("/labcas-ui/templates.html?version=2.3.2 #dataset_name_template");
+        //$( "#dataset_stat_template" ).load("/labcas-ui/templates.html?version=2.3.2 #dataset_name_template");
         $( "#collection_name_template" ).load("/labcas-ui/templates.html #collection_name_template");
 
         $( "#footer_template" ).load("/labcas-ui/templates.html #footer_template_"+localStorage.getItem("environment_name"));
@@ -217,10 +217,14 @@
             }
         }
         $('#breadcrumb').html(breadcrumb);
+        //console.log(localStorage.getItem('environment')+'/data-access-api/files/select?q=ParentDatasets:"'+data_split.slice(1,data_split.length).join("/")+'"&wt=json&indent=true&rows=0');
+        query_labcas_api(localStorage.getItem('environment')+'/data-access-api/files/select?q=ParentDatasets:"'+data_split.slice(1,data_split.length).join("/")+'"&wt=json&indent=true&rows=0',get_labcas_dataset_file_stats);
 	//Init shopping cart
-	init_file_checkboxes("files-table");
+        init_file_checkboxes("files-table");
+        if (!check_image_filtered_dataset(dataset_id)){
+            $('#dicom_sel').hide();
+        }
     });
-
     $("#check_all").change(function() {
         if(this.checked) {
             $('#dicom_sel').text("View All Images");

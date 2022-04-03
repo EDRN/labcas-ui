@@ -1,5 +1,9 @@
 Cookies.set("token", "None");
 $(document).ready(function(){
+    if (!Cookies.get('user')){
+        Cookies.set('user', "Sign in");
+    }
+    clear_cart('files-table');
 $.getJSON( '/labcas-ui/assets/conf/environment.cfg?version=2.3.2', function(json) {
 	$.each( json, function( key, val ) {
         if (typeof val == "string"){
@@ -21,13 +25,6 @@ $.getJSON( '/labcas-ui/assets/conf/environment.cfg?version=2.3.2', function(json
             });
 	$('#loginerror').html(localStorage.getItem("login_msg"));
 });
-function login_redirect(){
-	if (Cookies.get("login_redirect")){
-		window.location.replace(Cookies.get("login_redirect"));
-	}else{
-		window.location.replace("/labcas-ui/s/index.html?search=*");
-	}
-}
 $('#loginform').submit(function (e) {
 	e.preventDefault();
 	Cookies.set("user", $('#username').val());

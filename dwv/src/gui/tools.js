@@ -211,8 +211,10 @@ dwvjq.gui.WindowLevel = function (app) {
     }
     var preset_list = app.getViewController().getWindowLevelPresetsNames();
     var index = preset_list.indexOf("lung");
-    preset_list.splice(index, 1);
-    preset_list.unshift("lung");
+    if (index != -1){
+        preset_list.splice(index, 1);
+        preset_list.unshift("lung");
+    }
     // create new preset select
     var wlSelector = dwvjq.html.createHtmlSelect(
       'presetSelect',
@@ -224,7 +226,9 @@ dwvjq.gui.WindowLevel = function (app) {
       app.setWindowLevelPreset(event.currentTarget.value);
     };
     wlSelector.title = 'Select w/l preset.';
-    app.setWindowLevelPreset("lung");
+    if (index != -1){
+        app.setWindowLevelPreset("lung");
+    }
     // copy html list
     var wlLi = app.getElement('wlLi');
     // clear node

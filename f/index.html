@@ -167,7 +167,7 @@
 		Cookies.set("user",get_var["user"]);
 		Cookies.set("userpass",get_var["session"]);
 	}
-        setup_labcas_file_data("file",'id:"'+encodeURI(get_var["file_id"]).replace("&","%26")+'"', 'id:'+get_var["file_id"]+'*'); 
+        setup_labcas_file_data("file",'id:"'+encodeURI(get_var["file_id"]).replace("&","%26").replace("+","%2B")+'"', 'id:'+get_var["file_id"]+'*'); 
         
         var breadcrumb = '<li class="breadcrumb-item"><a href="/labcas-ui/m/index.html">Home</a></li>';
 		var data_split = get_var["file_id"].split("/");

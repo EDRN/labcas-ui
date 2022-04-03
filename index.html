@@ -21,7 +21,7 @@ The above copyright notice and this permission notice shall be included in all c
     <link rel="apple-touch-icon" sizes="76x76" href="img/apple-icon.png">
     <link rel="icon" type="image/png" href="img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>Labcas 2.2</title>
+    <title>Labcas 3.0</title>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
@@ -64,7 +64,7 @@ The above copyright notice and this permission notice shall be included in all c
                                 </div>
                                 <div class="modal-footer">
                                     <!--<center><button type="button" onclick="login_redirect();" class="btn btn-success btn-simple btn-link" data-dismiss="modal"><B>Accept</B></button></center>-->
-					<button type="submit" onclick="save_labcas_acceptance()" class="btn btn-info btn-fill pull-right" data-dismiss="modal">Accept</button>
+					<button type="submit" onclick="save_labcas_acceptance('login')" class="btn btn-info btn-fill pull-right" data-dismiss="modal">Accept</button>
                                 </div>
                             </div>
                         </div>
@@ -74,7 +74,7 @@ The above copyright notice and this permission notice shall be included in all c
         <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute">
             <div class="container">
                 <div class="navbar-wrapper">
-                    <a class="navbar-brand" href="#pablo">Labcas 2.2</a>
+                    <a class="navbar-brand" href="#pablo">Labcas 3.0</a>
                     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-bar burger-lines"></span>
                         <span class="navbar-toggler-bar burger-lines"></span>
@@ -82,10 +82,11 @@ The above copyright notice and this permission notice shall be included in all c
                     </button>
                 </div>
                 <div class="collapse navbar-collapse justify-content-end" id="navbar">
+			        <font color=white>Best Viewed with Chrome</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <a href="/labcas-ui/m/index.html" class="nav-link">
-                                <i class="nc-icon nc-chart-pie-35"></i> Collections
+                                <i class="nc-icon nc-chart-pie-35"></i>Public Collections
                             </a>
                         </li>
                     </ul>
@@ -95,17 +96,104 @@ The above copyright notice and this permission notice shall be included in all c
         <!-- End Navbar -->
         <div class="full-page  section-image" data-color="black" data-image="img/full-screen-image-2.jpg" ;>
             <!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
-            <div class="content">
+            <div class="content" style="padding-top:50px">
 
                 <div class="container">
-			<font color=white><center>Best Viewed with Chrome</center></font>
-                    <div class="col-md-6 col-sm-6 ml-auto mr-auto">
+                    <div class="row">
+                    <div class="col-md-8 col-sm-8 mr-auto ">
+                        <div class="row">
+                        <div class="col-lg-4 col-sm-6" style="padding:5px">
+                            <div class="card card-stats" style="margin: 5px">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <div class="icon-big text-center icon-warning">
+                                                <i class="nc-icon nc-app text-warning"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-7">
+                                            <div class="numbers">
+                                                <p class="card-category"># Collections</p>
+                                                <h4 class="card-title" id='collections_len'>20</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6"  style="padding:5px">
+                            <div class="card card-stats" style="margin: 5px">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <div class="icon-big text-center icon-warning">
+                                                <i class="nc-icon nc-layers-3 text-warning"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-7">
+                                            <div class="numbers">
+                                                <p class="card-category"># Datasets</p>
+                                                <h4 class="card-title" id='datasets_len'>100</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="col-lg-4 col-sm-6"  style="padding:5px">
+                            <div class="card card-stats" style="margin: 5px">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <div class="icon-big text-center icon-warning">
+                                                <i class="nc-icon nc-single-copy-04 text-success"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-7">
+                                            <div class="numbers">
+                                                <p class="card-category"># Files</p>
+                                                <h4 class="card-title" id='files_len'>200000</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-md-6"  style="padding:5px">
+                            <div class="card " style="margin: 5px">
+                                <div class="card-body" style="padding:0px">
+                                    <iframe frameBorder="0" height="300px" width="100%" src="/labcas-ui/a/organ_discipline_filetype_circos.html"></iframe>
+                                </div>
+                            </div>
+                          </div>
+                         <div class="col-md-6"  style="padding:5px">
+                            <div class="card " style="margin: 5px">
+                                <div class="card-body" style="padding:0px">
+                                    <iframe frameBorder="0" height="300px" width="100%" src="/labcas-ui/a/geographic_distribution.html"></iframe>
+                                </div>
+                            </div>
+                      </div>
+                      </div>
+                      <div class="row">
+                      <div class="col-md-12"  style="padding:5px">
+                            <div class="card " style="margin: 5px">
+                                <div class="card-body" style="padding:0px">
+                                    <iframe frameBorder="0" height="300px" width="100%" src="/labcas-ui/a/people_race_gender_distr.html"></iframe>
+                                </div>
+                          </div>
+                      </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6 ml-auto "  style="padding:5px">
                         <form class="form" id="loginform" method="" action="/labcas-ui/m/index.html">
-                            <div class="card card-login card-hidden">
+                            <div class="card card-login card-show" style="margin: 5px; height: 747px">
                                 <div class="card-header ">
                                     <h3 class="header text-center">Login</h3>
                                 </div>
-                                <div class="card-body ">
+                                <div class="card-body " >
+                                    <center><font color="grey">to see additional data...</font></center><hr><br>
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label>Username</label>
@@ -125,6 +213,7 @@ The above copyright notice and this permission notice shall be included in all c
                                 </div>
                             </div>
                         </form>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -203,12 +292,18 @@ The above copyright notice and this permission notice shall be included in all c
 <script src="js/demo.js"></script>
 <script src="js/plugins/js.cookie.js"></script>
 <script src="js/labcas/utils.js?version=2.3.2"></script>
-<script src="js/labcas/login.js?version=2.3.2"></script> 
+<script src="js/labcas/login.js?version=2.3.2"></script>
+<script src="/labcas-ui/assets/js/labcas/dashboard.js?version=2.3.6"></script> 
 <script>
     $(document).ready(function() {
     	
         
         demo.checkFullPageBackgroundImage();
+        $.getJSON('/labcas-ui/a/labcas_summary.json', function(data) {
+                   $('#collections_len').html(data.collection_size);
+                   $('#datasets_len').html(data.dataset_size);
+                   $('#files_len').html(data.file_size);
+        });
 
         setTimeout(function() {
             // after 1000 ms we add the class animated to the login/register card
