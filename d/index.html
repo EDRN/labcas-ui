@@ -164,10 +164,10 @@
 <!-- Light Dashboard DEMO methods, don't include it in your project! -->
 <script src="/labcas-ui/assets/js/plugins/js.cookie.js"></script>
 <script src="/labcas-ui/assets/js/labcas/labcas-sidebar.js"></script>
-<script src="/labcas-ui/assets/js/labcas/utils.js?version=2.3.3"></script>
-<script src="/labcas-ui/assets/js/labcas/authentication.js?version=2.3.2"></script>
-<script src="/labcas-ui/assets/js/labcas/search.js?version=2.3.2"></script>
-<script src="/labcas-ui/assets/js/labcas/datasets.js?version=2.3.2"></script>
+<script src="/labcas-ui/assets/js/labcas/utils.js?version=3.0.0"></script>
+<script src="/labcas-ui/assets/js/labcas/authentication.js?version=3.0.0"></script>
+<script src="/labcas-ui/assets/js/labcas/search.js?version=3.0.0"></script>
+<script src="/labcas-ui/assets/js/labcas/datasets.js?version=3.0.0"></script>
 
 <script type="text/javascript">
     var dataset_id = "";
@@ -175,7 +175,7 @@
 	initCookies();
 
 	$( "#head_template" ).load("/labcas-ui/templates.html #head_template");
-        $( "#nav_template" ).load("/labcas-ui/templates.html?version=2.3.2 #nav_template", function() {
+        $( "#nav_template" ).load("/labcas-ui/templates.html?version=3.0.0 #nav_template", function() {
             $( "#username_placeholder_second" ).text(Cookies.get('user'));
 	    if (Cookies.get('user') == "Sign in"){$( "#username_placeholder_third" ).text(Cookies.get('user')); 
                 $("#loggedout_msg").show();
@@ -185,11 +185,11 @@
         });
         $( "#favorite_stat_template" ).load("/labcas-ui/templates.html #favorite_stat_template");
         $( "#file_stat_template" ).load("/labcas-ui/templates.html #file_stat_template");
-        //$( "#dataset_stat_template" ).load("/labcas-ui/templates.html?version=2.3.2 #dataset_name_template");
+        //$( "#dataset_stat_template" ).load("/labcas-ui/templates.html?version=3.0.0 #dataset_name_template");
         $( "#collection_name_template" ).load("/labcas-ui/templates.html #collection_name_template");
 
         $( "#footer_template" ).load("/labcas-ui/templates.html #footer_template_"+localStorage.getItem("environment_name"));
-        $( "#sidebar_placeholder" ).load("/labcas-ui/sidebar_"+localStorage.getItem("environment_name")+".html?version=2.3.2" );
+        $( "#sidebar_placeholder" ).load("/labcas-ui/sidebar_"+localStorage.getItem("environment_name")+".html?version=3.0.0" );
 
 
         var get_var = get_url_vars();

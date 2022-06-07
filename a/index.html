@@ -379,11 +379,11 @@
 <!-- Light Dashboard DEMO methods, don't include it in your project! -->
 <!--<script src="/labcas-ui/assets/js/demo.js"></script>-->
 <script src="/labcas-ui/assets/js/plugins/js.cookie.js"></script>
-<script src="/labcas-ui/assets/js/labcas/utils.js?version=2.3.2"></script>
-<script src="/labcas-ui/assets/js/labcas/search.js?version=2.3.2"></script>
+<script src="/labcas-ui/assets/js/labcas/utils.js?version=3.0.0"></script>
+<script src="/labcas-ui/assets/js/labcas/search.js?version=3.0.0"></script>
 <script src="/labcas-ui/assets/js/labcas/labcas-sidebar.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script src="/labcas-ui/assets/js/labcas/dashboard.js?version=2.3.6"></script>
+<script src="/labcas-ui/assets/js/labcas/dashboard.js?version=3.0.0"></script>
 
 
 <script type="text/javascript">
@@ -393,7 +393,7 @@
         var get_var = get_url_vars();
         //console.log(get_var["dataset_id"]);
         setup_labcas_analytics();
-        $.get( "/labcas-ui/sidebar_"+localStorage.getItem("environment_name")+".html?version=2.3.2", function( data ) {
+        $.get( "/labcas-ui/sidebar_"+localStorage.getItem("environment_name")+".html?version=3.0.0", function( data ) {
             $( "#sidebar_placeholder" ).append(data);
             $( "#username_placeholder" ).html(Cookies.get('user'));
             $( "#username_placeholder_second" ).html(Cookies.get('user'));

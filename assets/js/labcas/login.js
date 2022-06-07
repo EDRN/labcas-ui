@@ -4,7 +4,7 @@ $(document).ready(function(){
         Cookies.set('user', "Sign in");
     }
     clear_cart('files-table');
-$.getJSON( '/labcas-ui/assets/conf/environment.cfg?version=2.3.2', function(json) {
+$.getJSON( '/labcas-ui/assets/conf/environment.cfg?version=3.0.0', function(json) {
 	$.each( json, function( key, val ) {
         if (typeof val == "string"){
             localStorage.setItem(key, val);

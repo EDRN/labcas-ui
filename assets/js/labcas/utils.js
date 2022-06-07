@@ -43,7 +43,7 @@ $().ready(function() {
 function redirect_to_login(){
     console.log("Attempting to redirect to login...");
     if (localStorage.getItem("allow_redirect") == "true"){
-        window.location.replace("/labcas-ui/index.html?version=2.3.2");
+        window.location.replace("/labcas-ui/index.html?version=3.0.0");
     }else{
 
     }
@@ -588,7 +588,7 @@ function checkSize(filecount, filesize, threshold){
 
 function resume_download(){
 	localStorage.setItem('download_size',0);
-	window.location.replace("/labcas-ui/download.html?version=2.3.2");
+	window.location.replace("/labcas-ui/download.html?version=3.0.0");
 }
 
 function download_file(val, type){
@@ -639,7 +639,7 @@ function download_files(formname){
     }
     localStorage.setItem('download_list',JSON.stringify(download_list));
     localStorage.setItem('download_size',download_size);
-    window.location.replace("/labcas-ui/download.html?version=2.3.2");
+    window.location.replace("/labcas-ui/download.html?version=3.0.0");
 }
 function download_dataset(dataset){
     dataset = dataset.replace("%5C%20","%20").replace("%20","%5C%20").replace(" ","%5C%20");
@@ -730,7 +730,7 @@ function generate_dataset_file_list(data){
         });
 	localStorage.setItem('download_list',JSON.stringify(download_list));
 	localStorage.setItem('download_size',download_size);
-	window.location.replace("/labcas-ui/download.html?version=2.3.2");
+	window.location.replace("/labcas-ui/download.html?version=3.0.0");
 }
 function download_script(filename, ostype) {
   var element = document.createElement('a');
@@ -1039,14 +1039,14 @@ function generate_image_file_list(data){
     }
     if (image_type == "dicoms"){
 	if (check_dicom_multi()){
-	       window.location.replace("/labcas-ui/i/mindex.html?version=2.3.2");
+	       window.location.replace("/labcas-ui/i/mindex.html?version=3.0.0");
 	}else{
-	       window.location.replace("/labcas-ui/i/index.html?version=2.3.2");
+	       window.location.replace("/labcas-ui/i/index.html?version=3.0.0");
 	}
     }else if(image_type = "omeros"){
-	window.location.replace("/labcas-ui/o/index.html?version=2.3.2");
+	window.location.replace("/labcas-ui/o/index.html?version=3.0.0");
     }else{
-       window.location.replace("/labcas-ui/z/index.html?version=2.3.2");
+       window.location.replace("/labcas-ui/z/index.html?version=3.0.0");
     }
 }
 
@@ -1115,14 +1115,14 @@ function submitSingleImageData(image, loc, name, version){
             console.log(image_type);
             if (image_type == "dicoms"){
 		if (check_dicom_multi()){
-		       window.location.replace("/labcas-ui/i/mindex.html?version=2.3.2");
+		       window.location.replace("/labcas-ui/i/mindex.html?version=3.0.0");
 		}else{
-		       window.location.replace("/labcas-ui/i/index.html?version=2.3.2");
+		       window.location.replace("/labcas-ui/i/index.html?version=3.0.0");
 		}
             }else if(image_type == "omeros"){
-		window.location.replace("/labcas-ui/o/index.html?version=2.3.2");
+		window.location.replace("/labcas-ui/o/index.html?version=3.0.0");
             }else{
-                window.location.replace("/labcas-ui/z/index.html?version=2.3.2");
+                window.location.replace("/labcas-ui/z/index.html?version=3.0.0");
             }
 
 }
@@ -1232,26 +1232,26 @@ function submitImageData(formname, dicom){
     if (formname.startsWith("cart_")){
         if (formname == "cart_dicom"){
 		if (check_dicom_multi()){
-		       window.location.replace("/labcas-ui/i/mindex.html?version=2.3.2");
+		       window.location.replace("/labcas-ui/i/mindex.html?version=3.0.0");
 		}else{
-		       window.location.replace("/labcas-ui/i/index.html?version=2.3.2");
+		       window.location.replace("/labcas-ui/i/index.html?version=3.0.0");
 		}
         }else if(formname == "cart_omero"){
-		window.location.replace("/labcas-ui/o/index.html?version=2.3.2");
+		window.location.replace("/labcas-ui/o/index.html?version=3.0.0");
 	}else{
-            window.location.replace("/labcas-ui/z/index.html?version=2.3.2");
+            window.location.replace("/labcas-ui/z/index.html?version=3.0.0");
         }
     }else{
        if (image_type == "dicoms"){
 		if (check_dicom_multi()){
-		       window.location.replace("/labcas-ui/i/mindex.html?version=2.3.2");
+		       window.location.replace("/labcas-ui/i/mindex.html?version=3.0.0");
 		}else{
-		       window.location.replace("/labcas-ui/i/index.html?version=2.3.2");
+		       window.location.replace("/labcas-ui/i/index.html?version=3.0.0");
 		}
        }else if(image_type == "omeros"){
-	  window.location.replace("/labcas-ui/o/index.html?version=2.3.2");
+	  window.location.replace("/labcas-ui/o/index.html?version=3.0.0");
        }else{
-          window.location.replace("/labcas-ui/z/index.html?version=2.3.2");
+          window.location.replace("/labcas-ui/z/index.html?version=3.0.0");
        }
     }
 }

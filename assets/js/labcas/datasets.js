@@ -139,7 +139,7 @@ function fill_datasets_children(data){
             $("#collection_datasets_len").html(dataset_count);
         }, 2000);
     }else{
-        $( "#dataset_stat_template" ).load("/labcas-ui/templates.html?version=2.3.2 #dataset_name_template");
+        $( "#dataset_stat_template" ).load("/labcas-ui/templates.html?version=3.0.0 #dataset_name_template");
     }
         $("#children-datasets-section").append(dataset_html);
 }

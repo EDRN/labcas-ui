@@ -136,16 +136,16 @@
 <link href="/labcas-ui/assets/css/labcas/custom.css" rel="stylesheet" />
 <script src="/labcas-ui/assets/js/plugins/js.cookie.js"></script>
 <script src="/labcas-ui/assets/js/labcas/labcas-sidebar.js"></script>
-<script src="/labcas-ui/assets/js/labcas/authentication.js?version=2.3.2"></script>
-<script src="/labcas-ui/assets/js/labcas/utils.js?version=2.3.3"></script>
-<script src="/labcas-ui/assets/js/labcas/search.js?version=2.3.2"></script>
+<script src="/labcas-ui/assets/js/labcas/authentication.js?version=3.0.0"></script>
+<script src="/labcas-ui/assets/js/labcas/utils.js?version=3.0.0"></script>
+<script src="/labcas-ui/assets/js/labcas/search.js?version=3.0.0"></script>
 <script type="text/javascript">
 	$('#image_viewer_link').hide();
     $(document).ready(function() {
 	initCookies();
 
-        $( "#head_template" ).load("/labcas-ui/templates.html?version=2.3.2 #head_template");
-        $( "#nav_template" ).load("/labcas-ui/templates.html?version=2.3.2 #nav_template", function() {
+        $( "#head_template" ).load("/labcas-ui/templates.html?version=3.0.0 #head_template");
+        $( "#nav_template" ).load("/labcas-ui/templates.html?version=3.0.0 #nav_template", function() {
             $( "#username_placeholder_second" ).text(Cookies.get('user'));
             if (Cookies.get('user') == "Sign in"){$( "#username_placeholder_third" ).html(Cookies.get('user'));}
 	    if (Cookies.get('user') == "Sign in"){$( "#username_placeholder_third" ).html(Cookies.get('user')); 
@@ -156,7 +156,7 @@
         });
 
 	$( "#footer_template" ).load("/labcas-ui/templates.html #footer_template_"+localStorage.getItem("environment_name"));
-        $( "#sidebar_placeholder" ).load("/labcas-ui/sidebar_"+localStorage.getItem("environment_name")+".html?version=2.3.2" );
+        $( "#sidebar_placeholder" ).load("/labcas-ui/sidebar_"+localStorage.getItem("environment_name")+".html?version=3.0.0" );
 
 
         var get_var = get_url_vars();
