@@ -107,7 +107,20 @@
 
 <!-- pageHeader #dwvversion -->
 <div id="pageHeader" data-role="header" data-position="fixed">
-<h1>Dicom Window <span id="window_span"></span></h1>
+<h1>Dicom Viewer
+<center>
+<table>
+<tr><td><select id="state_list"><option>Select Annotation</option></select></td>
+<td><button id="stateLoad" disabled>Load</button></td>
+<td><button id="stateDel" disabled>Delete</button></td>
+<td>&nbsp;&nbsp;</td><td style="width:150px"><input size=20 id="state_name_input" type="text" placeholder="Annotation Name..."></td>
+<td><button id="stateDown" disabled>Save</button></td>
+</tr>
+</table>
+</center>
+<span id="window_span"></span>
+
+</h1>
 <a href="#help_page" data-icon="carat-r" class="ui-btn-right"
   data-transition="slide" data-i18n="basics.help">Help</a>
 </div><!-- /pageHeader -->

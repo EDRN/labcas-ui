@@ -174,6 +174,7 @@ function startApp() {
     metaDataGui.update(myapp.getMetaData());
   });
   myapp.addEventListener('error', function (event) {
+    alert(event.error);
     console.error('load error', event);
     console.error(event.error);
     ++nReceivedError;
@@ -235,6 +236,97 @@ function startApp() {
 
   if (localStorage.getItem('multi_dicom') != "true"){
 	myapp.loadURLs(JSON.parse(localStorage.getItem('dicoms')), [{name:"Authorization", value:"Bearer "+Cookies.get('token')},{name:"contentType", value:"image/jpeg"}]);
+    var state = new dwv.State();
+    myapp.addEventListener('load', function () {
+      var loadbutton = document.getElementById('stateLoad');
+      var downbutton = document.getElementById('stateDown');
+      var delbutton = document.getElementById('stateDel');
+      loadbutton.disabled = false;
+      downbutton.disabled = false;
+      delbutton.disabled = false;
+
+      loadbutton.onclick = function () {
+        //myapp.loadURLs(["https://labcas-dev.jpl.nasa.gov/labcas-ui/assets/sass/state.json"]);
+        var state_name_selected = $('#state_list option:selected').val();
+        $.ajax({
+            url: "https://mcl.jpl.nasa.gov/ksdb/publishhtml/?rdftype=labcas_dicom_states&filterval="+Cookies.get("user")+"-labcas_split-"+state_name_selected,
+            type: 'GET',
+            dataType: 'json', 
+            success: function (data) {
+                console.log("data-json3");
+                console.log(data);
+                var state = new dwv.State();
+                state.apply(myapp, data);
+                //dwv.State.apply(myapp,data);
+            },
+            error: function(e){
+                console.log("Failed to grab annotation states for "+Cookies.get("user"));
+            }
+        });    
+
+        //myapp.loadURLs(["https://mcl.jpl.nasa.gov/ksdb/publishhtml/?rdftype=labcas_dicom_states&filterval=dliu-labcas_split-real_test"]);
+       };
+      downbutton.onclick = function () {
+        
+        console.log(myapp.getState());
+        console.log("submitting test");
+
+        var state_name = $('#state_name_input').val();
+        if (state_name == ""){
+            alert("Please enter name for your annotations to be saved against!");
+        }else{
+            $.ajax({
+                url: "https://mcl.jpl.nasa.gov/ksdb/save_labcas_dicom_state_input/",
+                type: 'POST',
+                dataType: "json",
+                data: JSON.stringify({'userid':Cookies.get("user"), 'state_name':state_name, 'state':myapp.getState()}),
+                success: function (data) {
+                    alert("Successfully saved dicom state "+state_name);
+                    window.location.reload();
+                },
+                error: function(e){
+                    alert("Save failed, please reach out to david.liu@jpl.nasa.gov for support.");
+                }
+            });
+         }
+       };
+
+        delbutton.onclick = function (){
+            console.log("submitting delete");
+            var state_name_selected = $('#state_list option:selected').val();
+            $.ajax({
+                url: "https://mcl.jpl.nasa.gov/ksdb/delete_labcas_dicom_state_input/",
+                type: 'POST',
+                dataType: "json",
+                data: JSON.stringify({'userid':Cookies.get("user"), 'state_name':state_name_selected}),
+                success: function (data) {
+                    alert("Successfully deleted dicom state "+state_name_selected);
+                    window.location.reload();
+                },
+                error: function(e){
+                    alert("Delete failed, please reach out to david.liu@jpl.nasa.gov for support.");
+                }
+            });
+        }
+
+      $.ajax({
+            url: localStorage.getItem("ksdb_labcas_dicom_state_name_api")+Cookies.get("user"),
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $.each( data.search_results, function( key, val ) {
+                    if (val != ""){
+                        $('#state_list').append("<option value='"+val+"'>"+val+"</option>");
+                    }
+                });
+
+            },
+            error: function(e){
+                console.log("Failed to grab annotation states for "+Cookies.get("user"));
+            }
+        });
+
+    });
   }else{
 	  var axial_list = JSON.parse(localStorage.getItem('dicoms1'));
 	  var coronal_list = JSON.parse(localStorage.getItem('dicoms2'));

@@ -29,7 +29,9 @@ $().ready(function() {
 	//initiate clinical-ui-link
 	setTimeout(function(){
         if (!(location.href.includes("/labcas-ui/index.html") || location.href.endsWith("/labcas-ui/") || location.href.endsWith("/labcas-ui") || location.href.includes("/labcas-ui/o/index.html"))){
-            console.log("2");
+            if(!localStorage.getItem('environment')){
+                localStorage.setItem("environment","https://"+location.hostname.split(/\//)[0]);
+            }
             query_labcas_api(localStorage.getItem('environment')+"/data-access-api/collections/select?q=*&facet=true&facet.limit=-1&wt=json&rows=0",get_labcas_collection_stats);
             query_labcas_api(localStorage.getItem('environment')+"/data-access-api/datasets/select?q=*&facet=true&facet.limit=-1&wt=json&rows=0",get_labcas_dataset_stats);
             query_labcas_api(localStorage.getItem('environment')+"/data-access-api/files/select?q=*&facet=true&facet.limit=-1&wt=json&rows=0",get_labcas_file_stats);
@@ -445,11 +447,10 @@ function paginate(divid, cpage){
         }
 }
 function escapeRegExp(string) {
-    console.log("replace!");
       return string.replace(/[\*\?\^\$\{\}\(\)\|\[\]\\~&!":]/g, '\\$&'); // $& means the whole matched string
 }
 function replaceRegExp(string, replace) {
-      return string.replace(/[\*\?\^\$\{\}\(\)\|\[\]\\~&! ":]/g, replace); // $& means the whole matched string
+      return string.replace(/[\*\?\^\$\{\}\(\)\|\[\]\\~&!;\.\/ ":]/g, replace); // $& means the whole matched string
 }
 
 function formatTimeOfDay(millisSinceEpoch) {
@@ -938,7 +939,7 @@ function introWizard(check_first_time){
 }
 
 function accepted_image_check(f){
-    var img_ext = [".svs",".jpg",".gif",".jpeg",".dcm",".dicom",".png",".tif",".tiff",".scm",".scn",".qptiff"];
+    var img_ext = [".svs",".jpg",".gif",".jpeg",".dcm",".DCM",".dicom",".png",".tif",".tiff",".scm",".scn",".qptiff"];
     var pass_flag = false;
     $.each(img_ext, function(key,value){
        if (f.toLowerCase().endsWith(value)){
@@ -961,7 +962,7 @@ function acepted_omero_check(f){
 }
 
 function generate_accepted_image_solr_filters(){
-	var img_ext = [".svs",".jpg",".gif",".jpeg",".dcm",".dicom",".png",".tif",".tiff",".scm",".scn",".qptiff"];
+	var img_ext = [".svs",".jpg",".gif",".jpeg",".dcm",".DCM",".dicom",".png",".tif",".tiff",".scm",".scn",".qptiff"];
 	var fq = "(id:*"+img_ext.join("%20AND%20id:*")+")";
 	return fq;
 }
@@ -1003,11 +1004,14 @@ function generate_image_file_list(data){
     var image_type = "image";
     console.log(data);
     $.each(data.response.docs, function(key, value) {
+        console.log("Here");
         console.log(key);
         console.log(value.id);
-        if ( accepted_image_check(value.id) ){
+        if ( accepted_image_check(value.id) || accepted_image_check(value.FileName)){
             var html_safe_id = encodeURI(escapeRegExp(value.id));
-            if (value.id.toLowerCase().endsWith(".dcm") || value.id.toLowerCase().endsWith(".dicom")){
+            if (value.id.toLowerCase().endsWith(".dcm") || value.id.toLowerCase().endsWith(".dicom") || value.id.toLowerCase().endsWith(".DCM")
+            || value.FileName.toLowerCase().endsWith(".dcm") || value.FileName.toLowerCase().endsWith(".dicom") || value.FileName.toLowerCase().endsWith(".DCM")
+            ){
                 image_type = "dicoms";
             }else if(acepted_omero_check(value.id)){
 		image_type = "omeros";
@@ -1060,16 +1064,22 @@ function checkDatasetContainsDicom(dataset_id, safe_dataset_id, data){
 
 function submitImage(formname, dataset){
     if ( $('#check_all:checked').length || dataset){
-	console.log("GOT HERE");
-	console.log(dataset);
+        console.log("GOT HERE");
+        console.log(dataset);
         var get_var = get_url_vars();
         if (dataset){
-            dataset = dataset.replace("%5C%20","%20").replace("%20","%5C%20").replace(" ","%5C%20");
-            console.log(localStorage.getItem('environment')+"/data-access-api/files/select?q=DatasetId:"+dataset+"&wt=json&indent=true&rows=10000");
-            query_labcas_api(localStorage.getItem('environment')+"/data-access-api/files/select?q=DatasetId:"+dataset+"&wt=json&indent=true&rows=10000", generate_image_file_list);
+            url = "";
+            if (dataset == "hierarchy_query" && localStorage.getItem("hierarchy_file_query")){
+                var file_query = localStorage.getItem("hierarchy_file_query");
+                url = localStorage.getItem('environment')+"/data-access-api/files/select?q=*"+file_query+"&wt=json&indent=true&rows=2147483647";
+            }else{
+                dataset = dataset.replace("%5C%20","%20").replace("%20","%5C%20").replace(" ","%5C%20");
+                url = localStorage.getItem('environment')+"/data-access-api/files/select?q=DatasetId:"+dataset+"&wt=json&indent=true&rows=10000";
+            }
+            console.log(url);
+            query_labcas_api(url, generate_image_file_list);
 
          }
-        //submitDicom('files-table','all',dataset_id)
         return;
     }else{
         submitImageData(formname);
@@ -1083,10 +1093,10 @@ function submitSingleImageData(image, loc, name, version){
 	var image_type = "image";
         image_list.push(localStorage.getItem('environment')+"/data-access-api/download?id="+image);
         histomics_list.push([loc,name,version, image]);
-        if (image.endsWith(".dcm") || image.endsWith(".dicom")){
+        if (name.endsWith(".dcm") || name.endsWith(".dicom") || name.endsWith(".DCM")){
             image_type = "dicoms";
         }
-        else if (acepted_omero_check(image)){
+        else if (acepted_omero_check(name)){
             image_type = "omeros";
         }else{
 		localStorage.setItem("image_data",JSON.stringify(histomics_list));
@@ -1147,19 +1157,26 @@ function submitImageData(formname, dicom){
     }else{}
    
     //custom code for qptiff
+    //
+    
+    console.log("Got HERE1");
  
     if (dicom){
+    console.log("Got HERE2");
         dicoms_list.push(localStorage.getItem('environment')+"/data-access-api/download?id="+$(dicom).val());
-        if ($(dicom).val().endsWith(".dcm") || $(dicom).val().endsWith(".dicom")){
+        if ($(dicom).val().endsWith(".dcm") || $(dicom).val().endsWith(".dicom") || $(dicom).val().endsWith(".DCM")){
             image_type = "dicoms";
         }
     }else{
+    console.log("Got HERE3");
         if (formname.startsWith("cart_")){
 	    if (localStorage.getItem('cart_list')){
+            console.log("HERE2");
         	download_list = JSON.parse(localStorage.getItem('cart_list'));
             $.each(download_list, function( key, val ) {
+                //check_image_filtered_dataset should be key, not val[1] since key is the full labcasId and contains dataset name within, while val[1] is just the filename itself.
                 if (check_image_filtered_dataset(key)){
-                    if (accepted_image_check(key) && (key.endsWith(".dcm") || key.endsWith(".dicom"))){
+                    if (accepted_image_check(val[1]) && (val[1].endsWith(".dcm") || val[1].endsWith(".dicom") || val[1].endsWith(".DCM"))){
                         dicoms_list.push(localStorage.getItem('environment')+"/data-access-api/download?id="+key);
                     }else if(acepted_omero_check(key)){
                         omero_list.push([val[0],val[1],val[2], key]);
@@ -1171,11 +1188,17 @@ function submitImageData(formname, dicom){
             });
         }
 	}else{
+    console.log("Got HERE4.0");
         $('#' + formname + ' input[type="checkbox"]').each(function() {
             
-            if ($(this).is(":checked") && accepted_image_check($(this).val())) {
-                
-                if ($(this).val().endsWith(".dcm") || $(this).val().endsWith(".dicom")){
+    console.log("Got HERE4.1");
+    console.log(formname);
+            if ($(this).is(":checked") && accepted_image_check($(this).data("name"))) {
+                console.log($(this).val());
+                console.log($(this).data("name"));
+                if ($(this).val().endsWith(".dcm") || $(this).val().endsWith(".dicom") || $(this).val().endsWith(".DCM") ||
+                    $(this).data("name").endsWith(".dcm") || $(this).data("name").endsWith(".dicom") || $(this).data("name").endsWith(".DCM") 
+                    ){
                      image_type = "dicoms";
                      dicoms_list.push(localStorage.getItem('environment')+"/data-access-api/download?id="+$(this).val());
                 }else if(acepted_omero_check($(this).val())){
@@ -1192,6 +1215,7 @@ function submitImageData(formname, dicom){
 	}
     }
     
+    console.log("Got HERE5");
     localStorage.setItem("image",JSON.stringify(image_list));
     localStorage.setItem("dicoms",JSON.stringify(dicoms_list));
     localStorage.setItem("image_data",JSON.stringify(histomics_list));
@@ -1512,7 +1536,7 @@ function set_cart_status (){
             console.log(check_image_filtered_dataset(key));
             if (check_image_filtered_dataset(key)){
                 console.log("IN");
-                if (val[1] && accepted_image_check(val[1]) && (val[1].endsWith(".dicom") || val[1].endsWith(".dcm"))){
+                if (val[1] && accepted_image_check(val[1]) && (val[1].endsWith(".dicom") || val[1].endsWith(".dcm") || val[1].endsWith(".DCM"))){
                     dicomsize += 1;
                 }else if(val[1] && acepted_omero_check(val[1])){
                     omerosize += 1;

@@ -199,6 +199,7 @@
 <script src="/labcas-ui/assets/js/labcas/authentication.js?version=2.3.3"></script>
 <script src="/labcas-ui/assets/js/labcas/utils.js?version=2.3.3"></script>
 <script src="/labcas-ui/assets/js/labcas/search.js?version=2.3.2"></script>
+<script src="/labcas-ui/assets/js/labcas/collections.js?version=2.3.2"></script>
 <script src="/labcas-ui/assets/js/labcas/hierarchy_filter_utils.js?version=2.3.2"></script>
 <script type="text/javascript">
     var get_var = get_url_vars();
@@ -259,13 +260,32 @@
         });
         $('#view_tags').on('itemAdded itemRemoved', function() {
             $('#hierarchy_').html("");
-            localStorage.setItem("last_collection_id", get_var["collection_id"]);
             fill_hierarchy_data(collection_facets, get_var["collection_id"], [], [], 0);
+            localStorage.setItem("hierarchy_tags", elt.val());
         });
         $('.twitter-typeahead').hide();
         setTimeout(function(){
+            localStorage.setItem("last_collection_id", get_var["collection_id"]);
             init_file_checkboxes('none');
-             collection_hierarchy_get(get_var["collection_id"]);
+            collection_hierarchy_get(get_var["collection_id"]);
+
+            //initiate tags for previous hierarchy sessions
+            /*if (localStorage.getItem("hierarchy_tags") != ""){
+                var valid_tags_check = false;
+                var hierarchy_tags = localStorage.getItem("hierarchy_tags").split(",");
+                $.each(hierarchy_tags, function( key, val ) {
+                    if (val in collection_facets.facet_counts.facet_fields){
+                        elt.tagsinput('add', { "value": val});
+                        valid_tags_check = true;
+                    }
+                });
+                //if tag exist as a key in the files under this collection, show the hierarchy built by the hierarchy tag combination
+                if (valid_tags_check){
+                    $('#datasets-table').hide();
+                    $('#hierarchy_').show();
+                }
+            }*/
+            //the above function is now called in hierarchy*.js kicked off by the above function collection_hierarchy_get due to race conditions. Look for hashtag #defaulthierarchy in the js file.
         },1000);
     });
 </script>

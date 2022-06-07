@@ -71,12 +71,9 @@
 				</div>
 				<div class="card-body">
                     <table>
-                        <tr><!--<td><button id="download_sel" type="submit" onclick="download_files('files-table');" class="btn btn-primary">Download Selected</button>-->
-                        <!--<button id="download_all" type="submit" onclick="download_dataset(dataset_id)" class="btn btn-primary">Download All</button>-->
-                        <!--<button id="dicom_sel" type="submit" onclick="submitImage('files-table')" class="btn btn-success">View Selected Image(s)</button></td>-->
-                        <!--<button id="dicom_all" type="submit" onclick="submitDicom('files-table','all',dataset_id)" class="btn btn-success">View All Dicoms</button>-->
-                        <!--<td>&nbsp;&nbsp;</td>-->
-                        <!--<td><input id="check_all" type='checkbox'  value="all">&nbsp;All</input></td>-->
+                        <tr><td><button id="download_sel" type="submit" onclick="download_files('files-table');" class="btn btn-primary">Download Selected</button>
+                        <button id="dicom_sel" type="submit" onclick="submitImage('files-table')" class="btn btn-success">View Selected Image(s)</button></td>
+                        <td><input id="check_all" type='checkbox'  value="all">&nbsp;All</input></td>
                         </tr>
                     </table>
 				<ul class="pagination pagination-no-border" id='hierarchy_files_pagination_top' style="float: right;"></ul>
@@ -170,7 +167,6 @@
 <script src="/labcas-ui/assets/js/labcas/search.js?version=2.3.2"></script>
 
 <script type="text/javascript">
-    var dataset_id = "";
     $(document).ready(function() {
 	initCookies();
 
@@ -208,7 +204,6 @@
         }
         console.log("hierarchy");
         console.log(hierarchy);
-        dataset_id_safe = hierarchy[1];
         var file_query = "";
         var breadcrumb_hierarchy = [];
         for (var i = 0; i < hierarchy[0].length; i++) {
@@ -235,18 +230,15 @@
             }
         }
         $('#breadcrumb').html(breadcrumb);
-	//Init shopping cart
+        //Init shopping cart
         init_file_checkboxes("files-table");
-        if (!check_image_filtered_dataset(dataset_id)){
-            $('#dicom_sel').hide();
-        }
     });
     $("#check_all").change(function() {
         if(this.checked) {
             $('#dicom_sel').text("View All Images");
             $('#download_sel').text("Download All");
-            $('#download_sel').attr("onclick", "download_dataset('"+dataset_id+"')");
-            $('#dicom_sel').attr("onclick","submitImage('files-table','"+dataset_id+"')");
+            $('#download_sel').attr("onclick", "download_dataset('hierarchy_query')");
+            $('#dicom_sel').attr("onclick","submitImage('files-table','hierarchy_query')");
 
         }else{
             $('#dicom_sel').text("View Selected Image(s)");

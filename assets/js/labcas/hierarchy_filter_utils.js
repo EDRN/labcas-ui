@@ -29,10 +29,29 @@ function collection_hierarchy_fill(data){
     });
     console.log(hierarchy_list);
     console.log("Done");
+
+    //Make sure hierarchy default is populated #-tagged #defaulthierarchy
+    if (localStorage.getItem("hierarchy_tags") != ""){
+        var valid_tags_check = false;
+        var hierarchy_tags = localStorage.getItem("hierarchy_tags").split(",");
+        var elt = $('#view_tags');
+        $.each(hierarchy_tags, function( key, val ) {
+            if (val in collection_facets.facet_counts.facet_fields){
+                elt.tagsinput('add', { "value": val});
+                valid_tags_check = true;
+            }
+        });
+        //if tag exist as a key in the files under this collection, show the hierarchy built by the hierarchy tag combination
+                        if (valid_tags_check){
+            $('#datasets-table').hide();
+            $('#hierarchy_').show();
+        }
+    }
+
 }
 
 function collection_hierarchy_get(collection_id){
-    var facets = "&facet.field=participantID&facet.field=SubmittingInvestigatorID&facet.field=contains_image&facet.field=DatasetName&facet.field=AssayType&facet.field=ContentType&facet.field=library_strategy";
+    var facets = "&facet.field=participantID&facet.field=SubmittingInvestigatorID&facet.field=contains_image&facet.field=dicom_StudyInstanceUID&facet.field=dicom_AccessionNumber&facet.field=dicom_PatientID&facet.field=dicom_StudyDate&facet.field=n&facet.field=dicom_Modality&facet.field=dicom_SeriesDescription&facet.field=dicom_StudyDescription&facet.field=dicom_SeriesInstanceUID&facet.field=DatasetName&facet.field=AssayType&facet.field=ContentType&facet.field=library_strategy";
     url = localStorage.getItem('environment')+"/data-access-api/files/select?q=CollectionId:"+collection_id+"&facet=true&facet.limit=-1&facet.mincount=1"+facets+"&wt=json&rows=0";
     query_labcas_api(url, collection_hierarchy_fill);
 }
@@ -51,27 +70,24 @@ function get_hierarchy_selected(idx){
         return -1;
     }
 }
-
+function toggle_child_elements(idx, show){
+    if (show == "true"){
+        $('div[id^="hierarchy_'+idx+'_"]').show();
+        $('#toggle_'+idx).html("<a onclick='toggle_child_elements(\""+idx+"\",\"false\")' href='#'><i class='fa fa-minus'></i></a>");
+    }else{
+        $('div[id^="hierarchy_'+idx+'_"]').hide();
+        $('#toggle_'+idx).html("<a onclick='toggle_child_elements(\""+idx+"\",\"true\")' href='#'><i class='fa fa-plus'></i></a>");
+    }
+}
 function fill_hierarchy_data(data, collection_id, path, pathval, idx){
     var collection_file_facets = data.facet_counts.facet_fields;
-    console.log("recursion");
-    console.log(data);
-    console.log(path);
-    console.log(idx);
     collection_file_f = get_hierarchy_selected(idx);
 
-    console.log(collection_file_facets);
-    console.log("recursion_end");
     if (collection_file_facets != -1){
-        console.log("loop");
-        console.log(collection_file_facets);
-        console.log(collection_file_facets[collection_file_f]);
-        console.log("loop_end");
         idx += 1;
         var prev = 1;
         var prev_v = 0;
         $.each(collection_file_facets[collection_file_f], function(k, v) {
-            console.log("loop_sub_sub");
             if (prev == 1){
                 prev_v = v;
                 prev = 0;
@@ -80,17 +96,22 @@ function fill_hierarchy_data(data, collection_id, path, pathval, idx){
                 if (v != 0 && $.trim(prev_v) != ''){
                     var pathval_child = pathval.slice();
                     var path_child = path.slice();
+                    var pathval_parent = pathval.slice();
                     pathval_child.push(prev_v);
                     path_child.push(collection_file_f);
-                    console.log("Path2");
-                    console.log(path_child);
-                    console.log(pathval_child);
                     var mapped_path = replaceRegExp(pathval.join("_"), "_");
                     var mapped_path_child = replaceRegExp(pathval_child.join("_"), "_");
+                    var mapped_path_parent = replaceRegExp(pathval_parent.join("_"), "_");
                     collection_facets_alias[mapped_path_child] = [path_child, pathval_child];
-                    console.log("Mapped");
-                    console.log(mapped_path_child);
-                    $('#hierarchy_'+mapped_path).append("<hr style='margin-bottom:0;margin-top:0'><div id='hierarchy_"+mapped_path_child+"' class=''>"+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".repeat(idx)+"&bull;<a onclick='submit_hierarchy_link(\""+mapped_path_child+"\")' href='#'>"+prev_v+"</a></div>");
+                    var visibility = "";
+                    var checkbox = "<a onclick='toggle_child_elements(\""+mapped_path_child+"\",\"true\")' href='#'><i class='fa fa-plus'></i></a>";
+                    if (idx > 1){
+                        visibility = "style='display:none'";
+                        checkbox = "<a onclick='toggle_child_elements(\""+mapped_path_child+"\",\"false\")' href='#'><i class='fa fa-minus'></i></a>";
+                    }
+                    $('#toggle_'+mapped_path_parent+'_').css("visibility", "visible");
+                    $('#toggle_'+mapped_path_parent).css("visibility", "visible");
+                    $('#hierarchy_'+mapped_path).append("<div id='hierarchy_"+mapped_path_child+"' "+visibility+" class=''><hr style='margin-bottom:0;margin-top:0'>"+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".repeat(idx)+"<nobr><span id='toggle_"+mapped_path_child+"' style='visibility: hidden'>"+checkbox+"</span><a onclick='submit_hierarchy_link(\""+mapped_path_child+"\")' href='#'>"+prev_v+"</a></nobr></div>");
                     collection_file_f_child = get_hierarchy_selected(idx);
                     if (collection_file_f_child == -1){
                         return;
@@ -107,8 +128,6 @@ function fill_hierarchy_data(data, collection_id, path, pathval, idx){
                         filter_field = "&"+filters.join("&");
                     }
                     url = localStorage.getItem('environment')+"/data-access-api/files/select?q=CollectionId:"+collection_id+filter_field+"&facet=true&facet.limit=-1&facet.mincount=1"+facets+"&wt=json&rows=0";
-                    console.log("url1");
-                    console.log(url);
                     $.ajax({
                         url: url,
                         beforeSend: function(xhr) {
@@ -120,7 +139,6 @@ function fill_hierarchy_data(data, collection_id, path, pathval, idx){
                         dataType: 'json',
                         processData: false,
                         success: function (filedata) {
-                            console.log(filedata);
                             fill_hierarchy_data(filedata, collection_id, path_child, pathval_child, idx);
                         },error: function(e){
                             if (!(localStorage.getItem("logout_alert") && localStorage.getItem("logout_alert") == "On")){

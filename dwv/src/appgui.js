@@ -135,13 +135,13 @@ dwvjq.gui.ToolboxContainer = function (app, infoController) {
     drawList.setAttribute('class', buttonClass + ' ui-icon-edit');
 
     var node = app.getElement('toolbar');
-    //node.appendChild(open);
+    node.appendChild(open);
     node.appendChild(undo);
     node.appendChild(redo);
     node.appendChild(toggleInfo);
-    //node.appendChild(toggleSaveState);
-    //node.appendChild(tags);
-    //node.appendChild(drawList);
+    node.appendChild(toggleSaveState);
+    node.appendChild(tags);
+    node.appendChild(drawList);
     dwvjq.gui.refreshElement(node);
   };
 

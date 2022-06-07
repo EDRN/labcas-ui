@@ -124,6 +124,30 @@
             }
             breadcrumb += '<li class="breadcrumb-item active" aria-current="page">Dicom Viewer</li>';
         }
+        else if(localStorage.getItem("hierarchy_dict_current")){
+
+        var hierarchy = JSON.parse(localStorage.getItem("hierarchy_dict_current"));
+        var breadcrumb_hierarchy = [];
+        for (var i = 0; i < hierarchy[0].length; i++) {
+            console.log(hierarchy[1][i]);
+            breadcrumb_hierarchy.push(hierarchy[0][i]+": "+String(hierarchy[1][i]));
+        }
+        var data_split = breadcrumb_hierarchy;
+        var url_prefix = "";
+        for (i = 0; i < data_split.length; i++) {
+            if(i == 0){
+                breadcrumb += '<li class="breadcrumb-item active" aria-current="page"><a href="/labcas-ui/c/index.html?collection_id='+localStorage.getItem('last_collection_id')+'">'+localStorage.getItem('last_collection_id').replace(/_/g," ")+'</a></li>';
+                breadcrumb += '<li class="breadcrumb-item active" aria-current="page"><a href="/labcas-ui/cd/index.html?backtrack_ind='+i+'">'+data_split[i].replace(/_/g," ")+'</a></li>';
+            }else if (i == data_split.length -1){
+                breadcrumb += '<li class="breadcrumb-item active" aria-current="page">'+data_split[i].replace(/_/g," ")+'</li>';
+            }else{
+                breadcrumb += '<li class="breadcrumb-item active" aria-current="page"><a href="/labcas-ui/cd/index.html?backtrack_ind='+i+'">'+data_split[i].replace(/_/g," ")+'</a></li>';
+            }
+        }
+
+
+        }
+
         if (Cookies.get("login_redirect").includes("search=")){
             breadcrumb += '<li class="breadcrumb-item active" aria-current="page"><a href="'+Cookies.get("login_redirect")+'">Search</a></li>';
             breadcrumb += '<li class="breadcrumb-item active" aria-current="page">Dicom Viewer</li>';
