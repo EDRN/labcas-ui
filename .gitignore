@@ -1,7 +1,9 @@
 *~
 *.swp
 *.swo
-scripts/
+scripts/__pycache__/
+scripts/diagnostics/
+scripts/*.log
 .claude/
 .playwright-cli/
 node_modules/
