@@ -1,3 +1,9 @@
 *~
 *.swp
 *.swo
+scripts/
+.claude/
+.playwright-cli/
+node_modules/
+package-lock.json
+package.json
