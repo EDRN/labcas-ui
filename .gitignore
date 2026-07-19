@@ -1,10 +1,13 @@
 *~
 *.swp
 *.swo
+.DS_Store
+.env
+reports/
 scripts/__pycache__/
 scripts/diagnostics/
+scripts/reports/
 scripts/*.log
-.claude/
 .playwright-cli/
 node_modules/
 package-lock.json

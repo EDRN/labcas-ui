@@ -1663,10 +1663,14 @@ def main():
     else:
         VERBOSE = args.verbose
     SHOW_TRACEBACK = args.show_traceback
-    username = input("LabCAS username: ").strip()
+    username = os.getenv("LABCAS_USERNAME", "").strip()
+    if not username:
+        username = input("LabCAS username: ").strip()
     if not username:
         raise ValueError("Username is required.")
-    password = getpass("LabCAS password: ")
+    password = os.getenv("LABCAS_PASSWORD", "")
+    if not password:
+        password = getpass("LabCAS password: ")
     if not password:
         raise ValueError("Password is required.")
 
