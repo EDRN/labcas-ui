@@ -393,18 +393,24 @@ function fill_dataset_details_data(data){
     });
 }
 function fill_file_details_data(data){
-	$("#filetitle").html(data.response.docs[0].FileName);
-	var html_safe_id = encodeURI(escapeRegExp(data.response.docs[0].id));
+	var doc = data.response.docs[0];
+	$("#filetitle").html(doc.FileName);
+	var html_safe_id = encodeURI(escapeRegExp(doc.id));
 	var fileurl = "";
-	if (data.response.docs[0].FileUrl){
-		var url = data.response.docs[0].FileUrl;
+	if (doc.FileUrl){
+		var url = doc.FileUrl;
 		fileurl = "<a href='"+url+"'>"+url+"</a>";
 	}
 	var filesize = "";
-	if (data.response.docs[0].FileSize){
-		filesize = humanFileSize(data.response.docs[0].FileSize, true);
+	if (doc.FileSize){
+		filesize = humanFileSize(doc.FileSize, true);
 	}
-	$.each(data.response.docs[0], function(key, value) {
+	if (typeof minervaItemFromDoc === "function" && (minervaAcceptedImageCheck(doc.FileName) || minervaAcceptedImageCheck(doc.id))){
+		window.labcasCurrentFileMinervaItem = minervaItemFromDoc(doc);
+		$("#minerva_file_card").show();
+		$("#minerva_icon").attr("onclick","launchMinervaViewer([window.labcasCurrentFileMinervaItem], labcasCurrentPath());");
+	}
+	$.each(doc, function(key, value) {
 		if (key == "_version_"){
 			return;
 		}
@@ -503,9 +509,15 @@ function fill_collection_level_files(data){
                 if ( download_list &&  download_list.includes(html_safe_id) ){
                         checked = "checked";
                 }
+                var minerva_button = "";
+                if (minervaAcceptedImageCheck(value.FileName) || minervaAcceptedImageCheck(value.id)){
+                        minerva_button = "<button type=\"button\" rel=\"minervabutton\" title=\"View in Minerva\" class=\"btn btn-info btn-simple btn-link\" onclick=\"view_minerva_row(this)\">"+
+                                        "<i class=\"fa fa-image\"></i>"+
+                                "</button>";
+                }
                 $("#files-table tbody").append(
                 "<tr>"+
-                        "<td><center><input type='checkbox' class='form-check-input' value='"+html_safe_id+"' "+checked+" data-valuesize='"+filesizenum+"'></center></td>"+
+                        "<td><center><input type='checkbox' class='form-check-input' value='"+html_safe_id+"' "+checked+" data-valuesize='"+filesizenum+"'"+minervaAttrsForDoc(value)+"></center></td>"+
                         "<td class='text-left'>"+
                                 "<a href=\"/labcas-ui/f/index.html?file_id="+
                                         html_safe_id+"\">"+
@@ -531,6 +543,7 @@ function fill_collection_level_files(data){
                                 "<button type=\"button\" rel=\"favoritebutton\" title=\"Favorite\" onclick=\"save_favorite('"+value.id+"', 'FavoriteFiles')\" class=\"btn "+color+" btn-simple btn-link\">"+
                                         "<i class=\"fa fa-star\"></i>"+
                                 "</button>"+
+                                minerva_button+
                                 "<button type=\"button\" rel=\"downloadbutton\" title=\"Download\" class=\"btn btn-danger btn-simple btn-link\" onclick=\"download_file('"+html_safe_id+"','single')\">"+
                                         "<i class=\"fa fa-download\"></i>"+
                                 "</button>"+
@@ -682,9 +695,15 @@ function fill_files_data(data){
 		if ( download_list &&  download_list.includes(html_safe_id) ){
 			checked = "checked";
 		}
+		var minerva_button = "";
+		if (minervaAcceptedImageCheck(value.FileName) || minervaAcceptedImageCheck(value.id)){
+			minerva_button = "<button type=\"button\" rel=\"minervabutton\" title=\"View in Minerva\" class=\"btn btn-info btn-simple btn-link\" onclick=\"view_minerva_row(this)\">"+
+					"<i class=\"fa fa-image\"></i>"+
+				"</button>";
+		}
 		$("#files-table tbody").append(
 		"<tr>"+
-			"<td><center><input type='checkbox' class='form-check-input' value='"+html_safe_id+"' "+checked+" data-valuesize='"+filesizenum+"'></center></td>"+
+			"<td><center><input type='checkbox' class='form-check-input' value='"+html_safe_id+"' "+checked+" data-valuesize='"+filesizenum+"'"+minervaAttrsForDoc(value)+"></center></td>"+
 			"<td class='text-left'>"+
 				"<a href=\"/labcas-ui/f/index.html?file_id="+
 					html_safe_id+"\">"+
@@ -710,6 +729,7 @@ function fill_files_data(data){
 				"<button type=\"button\" rel=\"favoritebutton\" title=\"Favorite\" onclick=\"save_favorite('"+value.id+"', 'FavoriteFiles')\" class=\"btn "+color+" btn-simple btn-link\">"+
 					"<i class=\"fa fa-star\"></i>"+
 				"</button>"+
+				minerva_button+
 				"<button type=\"button\" rel=\"downloadbutton\" title=\"Download\" class=\"btn btn-danger btn-simple btn-link\" onclick=\"download_file('"+html_safe_id+"','single')\">"+
 					"<i class=\"fa fa-download\"></i>"+
 				"</button>"+

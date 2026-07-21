@@ -1,0 +1,70 @@
+{
+  "Images": [
+    {
+      "Name": "i0",
+      "Description": "SVS sample - 131.33118545.25 converted to a static Minerva JPEG pyramid.",
+      "Path": "/labcas-ui/minerva/stories/svs-131-33118545-25/images/svs-131-33118545-25",
+      "Width": 911,
+      "Height": 768,
+      "MaxLevel": 0,
+      "TileSize": [
+        1024,
+        1024
+      ]
+    }
+  ],
+  "Header": "SVS sample - 131.33118545.25 generated locally from 131.33118545.25.svs.",
+  "Rotation": 0,
+  "Layout": {
+    "Grid": [
+      [
+        "i0"
+      ]
+    ]
+  },
+  "Stories": [
+    {
+      "Name": "SVS sample - 131.33118545.25",
+      "Description": "",
+      "Waypoints": [
+        {
+          "Name": "Overview",
+          "Description": "---\n# SVS sample - 131.33118545.25\nAperio SVS overview layer sample tile pyramid generated for LabCAS Minerva testing.",
+          "Arrows": [],
+          "Overlays": [],
+          "Group": "H&E",
+          "Masks": [],
+          "ActiveMasks": [],
+          "Zoom": 1,
+          "Pan": [
+            0.5,
+            0.5
+          ]
+        }
+      ]
+    }
+  ],
+  "Channels": [
+    {
+      "Rendered": true,
+      "Name": "H&E",
+      "Path": "he",
+      "Format": "jpg"
+    }
+  ],
+  "Masks": [],
+  "Groups": [
+    {
+      "Name": "H&E",
+      "Colors": [
+        "ffffff"
+      ],
+      "Channels": [
+        "H&E"
+      ],
+      "Descriptions": [
+        "Aperio SVS overview layer"
+      ]
+    }
+  ]
+}

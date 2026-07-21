@@ -1,0 +1,38 @@
+[
+  {
+    "label": "SCN - 3311031056 tissue",
+    "format": "SCN",
+    "exhibit": "/labcas-ui/minerva/stories/scn-3311031056-tissue/exhibit.json",
+    "source": "3311031056.scn"
+  },
+  {
+    "label": "SVS - 131.33118545.25",
+    "format": "SVS",
+    "exhibit": "/labcas-ui/minerva/stories/svs-131-33118545-25/exhibit.json",
+    "source": "BBD_Pathology_Slide_Images/131.33118545.25.svs"
+  },
+  {
+    "label": "SVS - 1-BBD-33110213-1",
+    "format": "SVS",
+    "exhibit": "/labcas-ui/minerva/stories/svs-1-bbd-331-33110213-1/exhibit.json",
+    "source": "BBD_Pathology_Slide_Images/1-BBD-331-33110213-1.svs"
+  },
+  {
+    "label": "TIFF - UAB EGFR du-145 pERK",
+    "format": "TIFF",
+    "exhibit": "/labcas-ui/minerva/stories/tiff-uab-egfr-du145-perk/exhibit.json",
+    "source": "UAB Test EGFR Translocation Data/du-145-pERK.tif"
+  },
+  {
+    "label": "TIFF - WHI Colon GenePix 563780-30",
+    "format": "TIFF",
+    "exhibit": "/labcas-ui/minerva/stories/tiff-whi-colon-563780-30/exhibit.json",
+    "source": "EDRN WHI Colon/563780-30.tif"
+  },
+  {
+    "label": "TIFF - NIST Fish bb22",
+    "format": "TIFF",
+    "exhibit": "/labcas-ui/minerva/stories/tiff-nist-fish-bb22/exhibit.json",
+    "source": "NIST Fish Data/bb22.tif"
+  }
+]

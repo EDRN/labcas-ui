@@ -1,0 +1,70 @@
+{
+  "Images": [
+    {
+      "Name": "i0",
+      "Description": "TIFF - UAB EGFR du-145 pERK converted to a static Minerva JPEG pyramid.",
+      "Path": "/labcas-ui/minerva/stories/tiff-uab-egfr-du145-perk/images/tiff-uab-egfr-du145-perk",
+      "Width": 1315,
+      "Height": 1033,
+      "MaxLevel": 1,
+      "TileSize": [
+        1024,
+        1024
+      ]
+    }
+  ],
+  "Header": "TIFF - UAB EGFR du-145 pERK",
+  "Rotation": 0,
+  "Layout": {
+    "Grid": [
+      [
+        "i0"
+      ]
+    ]
+  },
+  "Stories": [
+    {
+      "Name": "TIFF - UAB EGFR du-145 pERK",
+      "Description": "",
+      "Waypoints": [
+        {
+          "Name": "Overview",
+          "Description": "---\n# TIFF - UAB EGFR du-145 pERK\nTIFF test image.",
+          "Arrows": [],
+          "Overlays": [],
+          "Group": "H&E",
+          "Masks": [],
+          "ActiveMasks": [],
+          "Zoom": 1,
+          "Pan": [
+            0.5,
+            0.5
+          ]
+        }
+      ]
+    }
+  ],
+  "Channels": [
+    {
+      "Rendered": true,
+      "Name": "H&E",
+      "Path": "he",
+      "Format": "jpg"
+    }
+  ],
+  "Masks": [],
+  "Groups": [
+    {
+      "Name": "H&E",
+      "Colors": [
+        "ffffff"
+      ],
+      "Channels": [
+        "H&E"
+      ],
+      "Descriptions": [
+        "TIFF"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "Images": [
+    {
+      "Name": "i0",
+      "Description": "SCN sample - 3311031056 tissue crop converted to a static Minerva JPEG pyramid.",
+      "Path": "/labcas-ui/minerva/stories/scn-3311031056-tissue/images/scn-3311031056-tissue",
+      "Width": 2369,
+      "Height": 2083,
+      "MaxLevel": 2,
+      "TileSize": [
+        1024,
+        1024
+      ]
+    }
+  ],
+  "Header": "SCN sample - 3311031056 tissue crop generated locally from 3311031056.scn.",
+  "Rotation": 0,
+  "Layout": {
+    "Grid": [
+      [
+        "i0"
+      ]
+    ]
+  },
+  "Stories": [
+    {
+      "Name": "SCN sample - 3311031056 tissue crop",
+      "Description": "",
+      "Waypoints": [
+        {
+          "Name": "Overview",
+          "Description": "---\n# SCN sample - 3311031056 tissue crop\nLeica SCN tissue crop sample tile pyramid generated for LabCAS Minerva testing.",
+          "Arrows": [],
+          "Overlays": [],
+          "Group": "H&E",
+          "Masks": [],
+          "ActiveMasks": [],
+          "Zoom": 1,
+          "Pan": [
+            0.5,
+            0.5
+          ]
+        }
+      ]
+    }
+  ],
+  "Channels": [
+    {
+      "Rendered": true,
+      "Name": "H&E",
+      "Path": "he",
+      "Format": "jpg"
+    }
+  ],
+  "Masks": [],
+  "Groups": [
+    {
+      "Name": "H&E",
+      "Colors": [
+        "ffffff"
+      ],
+      "Channels": [
+        "H&E"
+      ],
+      "Descriptions": [
+        "Leica SCN tissue crop"
+      ]
+    }
+  ]
+}

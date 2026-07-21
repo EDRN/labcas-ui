@@ -1,0 +1,70 @@
+{
+  "Images": [
+    {
+      "Name": "i0",
+      "Description": "TIFF - WHI Colon GenePix 563780-30 converted to a static Minerva JPEG pyramid.",
+      "Path": "/labcas-ui/minerva/stories/tiff-whi-colon-563780-30/images/tiff-whi-colon-563780-30",
+      "Width": 2021,
+      "Height": 6333,
+      "MaxLevel": 3,
+      "TileSize": [
+        1024,
+        1024
+      ]
+    }
+  ],
+  "Header": "TIFF - WHI Colon GenePix 563780-30",
+  "Rotation": 0,
+  "Layout": {
+    "Grid": [
+      [
+        "i0"
+      ]
+    ]
+  },
+  "Stories": [
+    {
+      "Name": "TIFF - WHI Colon GenePix 563780-30",
+      "Description": "",
+      "Waypoints": [
+        {
+          "Name": "Overview",
+          "Description": "---\n# TIFF - WHI Colon GenePix 563780-30\nTIFF test image.",
+          "Arrows": [],
+          "Overlays": [],
+          "Group": "H&E",
+          "Masks": [],
+          "ActiveMasks": [],
+          "Zoom": 1,
+          "Pan": [
+            0.5,
+            0.5
+          ]
+        }
+      ]
+    }
+  ],
+  "Channels": [
+    {
+      "Rendered": true,
+      "Name": "H&E",
+      "Path": "he",
+      "Format": "jpg"
+    }
+  ],
+  "Masks": [],
+  "Groups": [
+    {
+      "Name": "H&E",
+      "Colors": [
+        "ffffff"
+      ],
+      "Channels": [
+        "H&E"
+      ],
+      "Descriptions": [
+        "TIFF"
+      ]
+    }
+  ]
+}

@@ -497,6 +497,197 @@ function download_files(formname){
     localStorage.setItem('download_size',download_size);
     window.location.replace("/labcas-ui/download.html");
 }
+
+function accepted_image_check(f){
+    var img_ext = [".svs",".jpg",".gif",".jpeg",".dcm",".dicom",".png",".tif",".tiff",".scm",".scn",".qptif",".qptiff"];
+    var pass_flag = false;
+    f = String(f || "");
+    $.each(img_ext, function(key,value){
+       if (f.toLowerCase().endsWith(value)){
+           pass_flag = true;
+           return false;
+       }
+    });
+    return pass_flag;
+}
+
+function minervaAcceptedImageCheck(f){
+    var name = String(f || "").toLowerCase();
+    return name.endsWith(".svs") ||
+           name.endsWith(".scn") ||
+           name.endsWith(".tif") ||
+           name.endsWith(".tiff") ||
+           name.endsWith(".ome.tif") ||
+           name.endsWith(".ome.tiff") ||
+           name.endsWith(".qptif") ||
+           name.endsWith(".qptiff");
+}
+
+function labcasHtmlAttr(value){
+    return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+function minervaFirstValue(value){
+    if ($.isArray(value)){
+        return value.length ? value[0] : "";
+    }
+    return value || "";
+}
+
+function minervaFieldValue(obj, fields){
+    obj = obj || {};
+    for (var i = 0; i < fields.length; i += 1){
+        if (obj[fields[i]]){
+            return minervaFirstValue(obj[fields[i]]);
+        }
+    }
+    return "";
+}
+
+function normalizeLabcasFileIdForDownload(fileId){
+    var id = String(fileId || "");
+    for (var i = 0; i < 3; i += 1) {
+        try {
+            var decoded = decodeURIComponent(id);
+            if (decoded === id) {
+                break;
+            }
+            id = decoded;
+        } catch (e) {
+            break;
+        }
+    }
+    var escapedChars = '*?^${}()|[]\\~&!":';
+    var normalized = "";
+    for (var j = 0; j < id.length; j += 1) {
+        if (id[j] === "\\" && j + 1 < id.length && escapedChars.indexOf(id[j + 1]) !== -1) {
+            continue;
+        }
+        normalized += id[j];
+    }
+    return normalized;
+}
+
+function minervaItemFromDoc(doc){
+    doc = doc || {};
+    return {
+        location: minervaFirstValue(doc.FileLocation),
+        name: minervaFirstValue(doc.FileName),
+        version: minervaFirstValue(doc.DatasetVersion),
+        id: normalizeLabcasFileIdForDownload(doc.id || ""),
+        size: minervaFirstValue(doc.FileSize),
+        source: "labcas",
+        MinervaStoryURL: minervaFieldValue(doc, ["MinervaStoryURL", "MinervaStoryUrl", "MinervaStory", "MinervaExhibitURL"]),
+        MinervaExhibitUrl: minervaFieldValue(doc, ["MinervaExhibitUrl", "MinervaExhibit", "minerva_story_url", "minerva_exhibit_url"]),
+        MinervaStorySessionURL: minervaFieldValue(doc, ["MinervaStorySessionURL", "MinervaStorySessionUrl", "MinervaSessionURL", "MinervaSessionUrl", "minerva_story_session_url", "minerva_session_url"])
+    };
+}
+
+function minervaAttrsForDoc(doc){
+    var item = minervaItemFromDoc(doc);
+    return " data-name=\"" + labcasHtmlAttr(item.name) + "\"" +
+           " data-location=\"" + labcasHtmlAttr(item.location) + "\"" +
+           " data-version=\"" + labcasHtmlAttr(item.version) + "\"" +
+           " data-story-url=\"" + labcasHtmlAttr(item.MinervaStoryURL) + "\"" +
+           " data-exhibit-url=\"" + labcasHtmlAttr(item.MinervaExhibitUrl) + "\"" +
+           " data-session-url=\"" + labcasHtmlAttr(item.MinervaStorySessionURL) + "\"";
+}
+
+function minervaItemFromCheckbox(checkbox){
+    var $checkbox = $(checkbox);
+    return {
+        location: $checkbox.attr("data-location") || "",
+        name: $checkbox.attr("data-name") || "",
+        version: $checkbox.attr("data-version") || "",
+        id: normalizeLabcasFileIdForDownload($checkbox.val() || ""),
+        size: $checkbox.attr("data-valuesize") || "",
+        source: "labcas",
+        MinervaStoryURL: $checkbox.attr("data-story-url") || "",
+        MinervaExhibitUrl: $checkbox.attr("data-exhibit-url") || "",
+        MinervaStorySessionURL: $checkbox.attr("data-session-url") || ""
+    };
+}
+
+function labcasCurrentPath(){
+    return window.location.pathname + window.location.search;
+}
+
+function launchMinervaViewer(items, redirectTarget, storyUrl){
+    if (!items || !items.length){
+        alert("No pathology image files selected for Minerva.");
+        return;
+    }
+    var normalized = [];
+    $.each(items, function(_, item){
+        if (!item){
+            return;
+        }
+        if ($.isArray(item)){
+            normalized.push({
+                location: item[0] || "",
+                name: item[1] || "",
+                version: item[2] || "",
+                id: normalizeLabcasFileIdForDownload(item[3] || ""),
+                size: item[4] || "",
+                source: "labcas"
+            });
+        } else {
+            normalized.push({
+                location: item.location || item.FileLocation || "",
+                name: item.name || item.FileName || "",
+                version: item.version || item.DatasetVersion || "",
+                id: normalizeLabcasFileIdForDownload(item.id || ""),
+                url: item.url || "",
+                size: item.size || item.FileSize || "",
+                source: item.source || "labcas",
+                MinervaStoryURL: item.MinervaStoryURL || item.MinervaStoryUrl || item.minerva_story_url || "",
+                MinervaExhibitUrl: item.MinervaExhibitUrl || item.MinervaExhibitURL || item.minerva_exhibit_url || "",
+                MinervaStorySessionURL: item.MinervaStorySessionURL || item.MinervaStorySessionUrl || item.MinervaSessionURL || item.minerva_story_session_url || item.minerva_session_url || ""
+            });
+        }
+    });
+    localStorage.setItem("labcas_minerva_files", JSON.stringify(normalized));
+    if (storyUrl){
+        localStorage.setItem("labcas_minerva_story_url", storyUrl);
+    } else {
+        localStorage.removeItem("labcas_minerva_story_url");
+    }
+    if (redirectTarget){
+        Cookies.set("login_redirect", redirectTarget);
+    }
+    window.location.replace("/labcas-ui/minerva/index.html?version=5.5.5");
+}
+
+function view_minerva_files(formname){
+    var minerva_list = [];
+    $("#" + formname + " input[type=\"checkbox\"]").each(function() {
+        if ($(this).is(":checked")) {
+            var item = minervaItemFromCheckbox(this);
+            if (minervaAcceptedImageCheck(item.name) || minervaAcceptedImageCheck(item.id)) {
+                minerva_list.push(item);
+            }
+        }
+    });
+    if (!minerva_list.length) {
+        alert("Select one or more SVS, SCN, TIFF, OME-TIFF, or QPTIFF files first.");
+        return;
+    }
+    launchMinervaViewer(minerva_list, labcasCurrentPath());
+}
+
+function view_minerva_row(button){
+    var checkbox = $(button).closest("tr").find("input[type=\"checkbox\"]").get(0);
+    if (!checkbox) {
+        alert("This row is missing file metadata for Minerva.");
+        return;
+    }
+    launchMinervaViewer([minervaItemFromCheckbox(checkbox)], labcasCurrentPath());
+}
 function download_dataset(dataset){
 	console.log(localStorage.getItem('environment')+"/data-access-api/files/select?q=DatasetId:"+dataset+"&wt=json&indent=true&rows=10000");
 	query_labcas_api(localStorage.getItem('environment')+"/data-access-api/files/select?q=DatasetId:"+dataset+"&wt=json&indent=true&rows=10000", generate_dataset_file_list);
